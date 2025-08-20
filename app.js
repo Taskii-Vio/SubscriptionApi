@@ -1,11 +1,22 @@
 import express from "express";
-import { PORT } from "./config/env.js";
+import authRouter from "./routes/auth.js";
+import usersRouter from "./routes/users.js";
+import subscriptionsRouter from "./routes/subscriptions.js";
+
+import connectToDb from "./DATABASE/mongodb.js";
+
+import { DB_URI, NODE_ENV, PORT } from "./config/env.js";
+
 const app = express();
 
-app.get("/", (req, res) => {
-  res.json({ message: "tarek" });
-});
+app.use("/auth", authRouter);
 
-app.listen(PORT, () => {
+app.use("/users", usersRouter);
+
+app.use("/subscriptions", subscriptionsRouter);
+
+app.listen(PORT, async () => {
+  await connectToDb();
+
   console.log(`this server is running on port ${PORT}`);
 });
